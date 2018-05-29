@@ -11,14 +11,17 @@ def relax(MatrizA, VectorB, Error,w):
     n = len(VectorB)
     Diagonal = np.diag(MatrizA)
     D = np.zeros((n,n))
+    D1 = np.zeros((n,n))
     for i in range(n):
         for j in range(n):
             if i == j:            
                 D[i,j] = Diagonal[i]
+                D1[i,j] = 1.0/Diagonal[i]
     E = np.tril(MatrizA)
     F = np.triu(MatrizA)
-    print E,'\n',F,'\n',D
-    D1 = np.linalg.inv(D)
+    print E,'\n',F,'\n',D1
+    #D1 = np.linalg.inv(D)
+    #print D1
     I = np.identity(n)
     Mr = np.linalg.inv(1 + w*(D1*E))*((1 - w)*I - w*(D1*F))
     ValoresP , VectoresP = np.linalg.eig(Mr)
@@ -50,7 +53,6 @@ for omega in range(2):
                         MatrizA[i - 1, j - 1] = 20 + i
                     else:
                         MatrizA[i - 1, j - 1] = ((-1)**(i + j))/(i + j)          
-        #aqui caga la wea, en la primera it 
         #print MatrizA,VectorB
         XAprox = relax(MatrizA, VectorB, 10**(-10),ws[omega])
         NIteraciones = relax(MatrizA, VectorB, 10**(-10),ws[omega])          
