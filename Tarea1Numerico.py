@@ -9,13 +9,15 @@ Created on Sun May 27 21:55:08 2018
 import numpy as np
 def relax(MatrizA, VectorB, Error,w):
     n = len(VectorB)
-    D = np.diag(MatrizA)
+    Diagonal = np.diag(MatrizA)
+    D = np.zeros((n,n))
+    for i in range(n):
+        for j in range(n):
+            if i == j:            
+                D[i,j] = Diagonal[i]
     E = np.tril(MatrizA)
     F = np.triu(MatrizA)
-    print D
-    print E
-    print F
-    a = raw_input('')
+    print E,'\n',F,'\n',D
     D1 = np.linalg.inv(D)
     I = np.identity(n)
     Mr = np.linalg.inv(1 + w*(D1*E))*((1 - w)*I - w*(D1*F))
@@ -53,10 +55,8 @@ for omega in range(2):
         XAprox = relax(MatrizA, VectorB, 10**(-10),ws[omega])
         NIteraciones = relax(MatrizA, VectorB, 10**(-10),ws[omega])          
         XAproxs.append(XAprox)
-        NIteracioness.append(NIteraciones)    
-        
+        NIteracioness.append(NIteraciones)         
 #1)
-
 print 'b)1)\nPara w = ', ws[i], '\nx = ',XAproxs[i] 
             
             
