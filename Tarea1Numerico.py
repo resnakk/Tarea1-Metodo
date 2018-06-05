@@ -7,6 +7,7 @@ Created on Sun May 27 21:55:08 2018
 #=========================  P3 =============================
 #A
 import numpy as np
+import time 
 def relax(MatrizA, VectorB, Error,w):
     n = len(VectorB)
     #print n
@@ -15,23 +16,28 @@ def relax(MatrizA, VectorB, Error,w):
     for i in range(n):
         for j in range(n):
             if i == j:            
-                D[i,j] = Diagonal[i]
-    E = np.tril(MatrizA)
-    F = np.triu(MatrizA)
-    D1 = np.linalg.inv(D)
-    I = np.identity(n)
-    Mr = np.linalg.inv(1 + w*(D1*E))*((1 - w)*I - w*(D1*F))
+                D[i,j] = Diagonal[i]     
+    L = np.tril(MatrizA)
+    U = np.triu(MatrizA)
+    #print F
+    #D1 = np.linalg.inv(D)
+    #I = np.identity(n)
+    #Mr = 
     XK = np.zeros([n,1],float) #Parto del vector 0, y pongo float para q sepa q se pueden decimales
+    #cw = (w*np.linalg.inv(D - w*F))*VectorB
+    #print D-w*F    
     i = 1
     while True:
-        cw = (w*np.linalg.inv(D - w*F))*VectorB                
-        XK1 = Mr*XK + cw
-        cond = np.linalg.norm(MatrizA*XK1 - VectorB) 
+        XK1 = w*np.linalg.inv(L + D)*(VectorB - U*XK) + (1 - w)*XK
+        cond = np.linalg.norm(MatrizA*XK - VectorB) 
         er =  Error*np.linalg.norm(VectorB)
+        #print XK
         print cond, er 
-        if cond <= er:
+        #time.sleep(0.5)
+        if cond >= er:
             i += 1
             XK = XK1
+            print cond, er
             continue
         else:
             return [XK1,i]
@@ -40,7 +46,6 @@ def relax(MatrizA, VectorB, Error,w):
 ws =    [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]
 XAproxs = []
 NIteracioness = []
-
 for n in range(100,1001):
     MatrizA = np.zeros((n,n))
     VectorB = np.zeros([n,1],float)
