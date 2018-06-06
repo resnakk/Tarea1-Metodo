@@ -9,38 +9,44 @@ Created on Sun May 27 21:55:08 2018
 import numpy as np
 import time 
 def relax(MatrizA, VectorB, Error,w):
+    
     n = len(VectorB)
-    #print n
-    Diagonal = np.diag(MatrizA)
-    D = np.zeros((n,n))   
-    for i in range(n):
-        for j in range(n):
-            if i == j:            
-                D[i,j] = Diagonal[i]     
-    L = np.tril(MatrizA)
-    U = np.triu(MatrizA)
-    #print F
-    #D1 = np.linalg.inv(D)
-    #I = np.identity(n)
-    #Mr = 
-    XK = np.zeros([n,1],float) #Parto del vector 0, y pongo float para q sepa q se pueden decimales
-    #cw = (w*np.linalg.inv(D - w*F))*VectorB
-    #print D-w*F    
-    i = 1
-    while True:
-        XK1 = w*np.linalg.inv(L + D)*(VectorB - U*XK) + (1 - w)*XK
-        cond = np.linalg.norm(MatrizA*XK - VectorB) 
-        er =  Error*np.linalg.norm(VectorB)
-        #print XK
-        print cond, er 
-        #time.sleep(0.5)
-        if cond >= er:
-            i += 1
-            XK = XK1
-            print cond, er
+    XK = np.zeros([n,1], float)
+    XK1 = np.zeros([n,1], float)
+    cont = 1
+    o = 1
+    while 0 < 99999999:
+        if o == 1 :
+            o += 1
             continue
         else:
-            return [XK1,i]
+            f = bool(np.linalg.norm(XK1 - XK) < Error)#np.linalg.norm(MatrizA*XK1 - VectorB) <= Error*np.linalg.norm(VectorB))
+            #print np.linalg.norm(MatrizA*XK1 - VectorB) , Error*np.linalg.norm(VectorB), MatrizA[0,0]*XK1[0,0], VectorB[0,0] 
+            if  f == True:
+                return [XK1, cont]
+                print cont
+                break
+            else:
+                for i in range(1, n + 1 ):
+                        sum1 = 0
+                        if i == 1:
+                            continue
+                        else:
+                            for j in range(1, i):
+                                sum1 += MatrizA[i - 1,j - 1]*XK1[i - 1, 0]
+                        sum2 = 0
+                        for k in range(i + 1, n + 1):
+                            sum2 += MatrizA[i - 1, k - 1]*XK[k - 1, 0]
+                        
+                        top = w*(-sum1 - sum2 + VectorB[i - 1,0])
+                        c = (1 - w)*XK[i - 1, 0]
+                        XK1[i - 1, 0] = top/MatrizA[i - 1, i - 1] + c
+                o += 1
+                XK = XK1
+                cont += 1
+                print cont
+                
+                    
             
 #B)1)
 ws =    [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]
