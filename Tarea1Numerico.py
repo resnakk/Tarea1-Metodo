@@ -15,13 +15,14 @@ def relax(MatrizA, VectorB, Error,w):
     XK1 = np.zeros([n,1], float)
     cont = 1
     o = 1
-    while 0 < 99999999:
+    while True:
         if o == 1 :
             o += 1
             continue
         else:
             f = bool(np.linalg.norm(XK1 - XK) < Error)#np.linalg.norm(MatrizA*XK1 - VectorB) <= Error*np.linalg.norm(VectorB))
             #print np.linalg.norm(MatrizA*XK1 - VectorB) , Error*np.linalg.norm(VectorB), MatrizA[0,0]*XK1[0,0], VectorB[0,0] 
+            #No use este criterio de salida por que no salia nunca de la primera iteracion            
             if  f == True:
                 return [XK1, cont]
                 print cont
@@ -45,7 +46,7 @@ def relax(MatrizA, VectorB, Error,w):
                 XK = XK1
                 cont += 1
                 print cont
-                
+        o = 1         
                     
             
 #B)1)
